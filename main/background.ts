@@ -14,7 +14,7 @@ if (isProd) {
 
 ;(async () => {
   await app.whenReady()
-  // Menu.setApplicationMenu(null)
+  Menu.setApplicationMenu(null)
   const mainWindow = createWindow('main', {
     width: 1050,
     height: 630,
