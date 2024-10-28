@@ -48,6 +48,7 @@ useEffect(() => {
 // console.log(otherMembers.length === 1 && lastMessage == `Welcome, ${currentUser?.username}` && isSend &&!isFriend)
 const sendFriendRequest = async () => {
   try {
+    setIsFriend(true);
     const res = await fetch("/api/messages/agreed", {
       method: "POST",
       headers: {
@@ -58,9 +59,9 @@ const sendFriendRequest = async () => {
         friendId: otherMembers[0]?._id,
       }),
     });
-    if (res.ok) {
-      setIsFriend(true);
-    } 
+    // if (res.ok) {
+    //   setIsFriend(true);
+    // } 
   } catch (error) {
     console.error("Error sending friend request:", error);
   }
@@ -98,6 +99,7 @@ useEffect(() => {
   }, [currentUser, chatId]);
 
   const sendText = async () => {
+    setText("");
     try {
       const res = await fetch("/api/messages/route", {
         method: "POST",
@@ -110,10 +112,9 @@ useEffect(() => {
           text,
         }),
       });
-
-      if (res.ok) {
-        setText("");
-      }
+      // if (res.ok) {
+      //   setText("");
+      // }
     } catch (err) {
       console.log(err);
     }
@@ -178,6 +179,7 @@ useEffect(() => {
   }, [chat?.messages]);
 
   const makeFriend = async () =>{
+    setIsSend(true);
     try {
       const res = await fetch("/api/messages/route", {
         method: "POST",
@@ -201,9 +203,9 @@ useEffect(() => {
             friendId: otherMembers[0]._id,
           }),
         })
-        if(res.ok){
-          setIsSend(true);
-        }
+        // if(res.ok){
+        //   setIsSend(true);
+        // }
       }
     } catch (err) {
       console.log(err);

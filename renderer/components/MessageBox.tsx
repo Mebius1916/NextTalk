@@ -37,6 +37,8 @@ function displayTime(createdAt:string) {
   }
 }
   const agree = async () =>{
+    setIsAgree(true);
+    handleStateChange();
     try{
       const res = await fetch("/api/messages/route", {
         method: "POST",
@@ -71,10 +73,10 @@ function displayTime(createdAt:string) {
               friendId: otherMembers[0]._id,
             }),
           })
-          if(res.ok){
-              setIsAgree(true);
-              handleStateChange();
-            }
+          // if(res.ok){
+          //     setIsAgree(true);
+          //     handleStateChange();
+          //   }
         }
       }
     }catch(err){
