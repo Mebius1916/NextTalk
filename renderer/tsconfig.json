@@ -1,0 +1,5 @@
+{
+  "extends": "../tsconfig.json",
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/api/auth/[...nextauth]", "pages/api/auth/register/route.tss", "pages/chats/[chatId]"],
+  "exclude": ["node_modules"]
+}

@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html{
+  border-radius: 0;
+}
+body {
+  -webkit-app-region: drag;
+  border-radius: 0;
+}
+
+button {
+  -webkit-app-region: no-drag;
+}
+#home{
+  -webkit-app-region: no-drag;
+}
+.titlebar {
+  -webkit-user-select: none;
+  -webkit-app-region: drag;
+}
+::-webkit-scrollbar {
+  width: 0.1rem;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background:rgb(213, 209, 209) ;
+}
