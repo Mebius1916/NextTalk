@@ -13,6 +13,7 @@ import grid2 from '../../../public/images/grid2.png';
 import ChatDetails from '../../../components/ChatDetails';
 
 import { pusherClient } from '../../../lib/pusher';
+import { ToastContainer } from 'react-toastify';
 const Chat = () => {
   const { chatId } = useParams()?? { chatId: 'home' };
   const { data: session } = useSession();
@@ -85,6 +86,8 @@ const Chat = () => {
   return loading ? (
     <Loader />
   ) : (
+    <>
+    <ToastContainer position="top-center" />
     <div className='bg-gray-100 h-[calc(100vh-2.25rem)] shadow-inset-top-left flex' id='home'>
       {/* chatList */}
       <div className='mt-4'>
@@ -136,6 +139,7 @@ const Chat = () => {
         </div>
       </div>
     </div>
+    </>
   )
 }
 Chat.getLayout = function getLayout(page: any) {

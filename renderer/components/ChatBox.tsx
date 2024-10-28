@@ -23,6 +23,7 @@ const ChatBox = ({ chat, currentUser, currentChatId }: ChatBox) => {
   const [isShow,setIsShow] = useState(lastMessage&&lastMessage?.sender?._id!==currentUser._id &&!isSeen);
   const read = () => {
     const readMessage = async () => {
+      if(lastMessage){
       try {
         setIsSeen(true);
         setIsShow(false);
@@ -40,6 +41,7 @@ const ChatBox = ({ chat, currentUser, currentChatId }: ChatBox) => {
       }
     };
     readMessage();
+  }
   };
 
   useEffect(() => {

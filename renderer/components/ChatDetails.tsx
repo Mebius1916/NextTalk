@@ -1,4 +1,5 @@
 //在当前页面开始向Chat模型个体添加Message个体_id
+// 在当前页面开始向Chat模型个体添加Message个体_id
 "use client";
 import { useState, useEffect, useRef } from "react";
 import Loader from "./Loader";
@@ -11,69 +12,74 @@ import MessageBox from "./MessageBox";
 import { messageData, SessionData, chatData } from "../lib/type";
 import { pusherClient } from "../lib/pusher";
 import { Button } from "@nextui-org/react";
+import { toast } from "react-toastify";
 
 const ChatDetails = ({ chatId }: { chatId: string }) => {
   const [loading, setLoading] = useState(true);
   const [chat, setChat] = useState<chatData>({
-    _id:'',
+    _id: '',
     members: [],
     messages: [],
     isGroup: false,
     createdAt: new Date(),
     lastMessageAt: new Date(),
   });
-  const messageLength=  chat?.messages[chat?.messages.length - 1] as any
-  const lastMessage=chat?.messages?.length > 0 && messageLength.text;
-  
+  const messageLength = chat?.messages[chat?.messages.length - 1] as any
+  const [lastMessage, setLastMessage] = useState(chat?.messages?.length > 0 && messageLength.text);
+
   const [otherMembers, setOtherMembers] = useState([]) as any;
   const { data: session } = useSession();
-  const currentUser = session?.user as SessionData; 
+  const currentUser = session?.user as SessionData;
   const [isSend, setIsSend] = useState(
-    currentUser && currentUser.isSend&&otherMembers.length === 1 ?  currentUser?.isSend.includes(otherMembers[0]?._id): false
-
+    currentUser?.isSend.includes(otherMembers[0]?._id)
   );
-// console.log(isSend)
+  console.log(currentUser?.isSend.includes(otherMembers[0]?._id))
+  console.log(isSend)
   const [text, setText] = useState("");
   const [isFriend, setIsFriend] = useState(
-    currentUser && currentUser.friends && otherMembers.length === 1 ? currentUser.friends.includes(otherMembers[0]?._id) : false
+    currentUser.friends.includes(otherMembers[0]?._id)
   );
   const handleStateChange = () => {
     setIsFriend(true);
-}
-const userSend = currentUser?.isSend as any;
-useEffect(() => {
-  setIsSend(otherMembers.length === 1 && userSend.includes(otherMembers[0]?._id));
-  setIsFriend( currentUser && currentUser.friends && otherMembers.length === 1 ? currentUser.friends.includes(otherMembers[0]?._id) : false)
-}, [otherMembers,currentUser,chat]);
-// console.log(otherMembers.length === 1 && lastMessage == `Welcome, ${currentUser?.username}` && isSend &&!isFriend)
-const sendFriendRequest = async () => {
-  try {
-    setIsFriend(true);
-    const res = await fetch("/api/messages/agreed", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        currentUserId: currentUser._id,
-        friendId: otherMembers[0]?._id,
-      }),
-    });
-    // if (res.ok) {
-    //   setIsFriend(true);
-    // } 
-  } catch (error) {
-    console.error("Error sending friend request:", error);
   }
-};
-// console.log(currentUser)
+  const userSend = currentUser?.isSend as any;
 
-// console.log(otherMembers.length === 1 && lastMessage == `Welcome, ${currentUser?.username}` && isSend &&!isFriend)
-useEffect(() => {
-  if (otherMembers.length === 1 && lastMessage == `Welcome, ${currentUser?.username}` && isSend &&!isFriend) {
-    sendFriendRequest();
-  }
-}, [lastMessage,currentUser,chatId]);
+  useEffect(() => {
+    setLastMessage(chat?.messages?.length > 0 && messageLength.text);
+    setIsSend(otherMembers.length === 1 && userSend.includes(otherMembers[0]?._id));
+    setIsFriend(
+      currentUser && currentUser.friends && otherMembers.length === 1? currentUser.friends.includes(otherMembers[0]?._id) : false
+    )
+  }, [chat]);
+  // console.log(otherMembers.length === 1 && lastMessage == `Welcome, ${currentUser?.username}` && isSend &&!isFriend)
+  const sendFriendRequest = async () => {
+    try {
+      setIsFriend(true);
+      const res = await fetch("/api/messages/agreed", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          currentUserId: currentUser._id,
+          friendId: otherMembers[0]?._id,
+        }),
+      });
+      if (res.ok) {
+        setIsFriend(true);
+      }
+    } catch (error) {
+      console.error("Error sending friend request:", error);
+    }
+  };
+  // console.log(currentUser)
+
+  // console.log(otherMembers.length === 1 && lastMessage == `Welcome, ${currentUser?.username}` && isSend &&!isFriend)
+  useEffect(() => {
+    if (otherMembers.length === 1 && lastMessage == `Welcome, ${currentUser?.username}` && isSend &&!isFriend) {
+      sendFriendRequest();
+    }
+  }, [lastMessage, currentUser, chatId]);
 
   const getChatDetails = async () => {
     try {
@@ -86,7 +92,7 @@ useEffect(() => {
       const data = await res.json();
       setChat(data);
       setOtherMembers(
-        data?.members?.filter((member: SessionData) => member._id !== currentUser?._id)
+        data?.members?.filter((member: SessionData) => member._id!== currentUser?._id)
       );
       setLoading(false);
     } catch (error) {
@@ -99,8 +105,8 @@ useEffect(() => {
   }, [currentUser, chatId]);
 
   const sendText = async () => {
-    setText("");
     try {
+      setText("");
       const res = await fetch("/api/messages/route", {
         method: "POST",
         headers: {
@@ -146,9 +152,9 @@ useEffect(() => {
     //响应添加newMessage
 
     const handleMessage = async (newMessage: messageData) => {
-      setChat((prevChat:any) => {
+      setChat((prevChat: any) => {
         return {
-          ...prevChat,
+         ...prevChat,
           messages: [...prevChat.messages, newMessage],
         };
       });
@@ -168,7 +174,7 @@ useEffect(() => {
 
   /* Scrolling down to the bottom when having the new message */
 
-  const bottomRef = useRef(null) as any; 
+  const bottomRef = useRef(null) as any;
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({
@@ -178,39 +184,46 @@ useEffect(() => {
     });
   }, [chat?.messages]);
 
-  const makeFriend = async () =>{
-    setIsSend(true);
-    try {
-      const res = await fetch("/api/messages/route", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          chatId,
-          currentUserId: currentUser._id,
-          text:"Friend application",
-        }),
-      });
-      if(res.ok){
-        const res = await fetch("/api/messages/isSend", {
+  const [isFriendRequestSent, setIsFriendRequestSent] = useState(false); // 新增状态，用于记录是否已经发送好友请求
+
+  const makeFriend = async () => {
+    if (!isFriendRequestSent) { // 如果尚未发送好友请求
+      try {
+        setIsSend(true);
+        setIsFriendRequestSent(true); // 设置为已发送
+        const res = await fetch("/api/messages/route", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
+            chatId,
             currentUserId: currentUser._id,
-            friendId: otherMembers[0]._id,
+            text: "Friend application",
           }),
-        })
-        // if(res.ok){
-        //   setIsSend(true);
-        // }
+        });
+        if (res.ok) {
+          const res = await fetch("/api/messages/isSend", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              currentUserId: currentUser._id,
+              friendId: otherMembers[0]._id,
+            }),
+          })
+          // if (res.ok) {
+          //   setIsSend(true);
+          // }
+        }
+      } catch (err) {
+        console.error(err);
       }
-    } catch (err) {
-      console.log(err);
+    }else{
+      toast.info("Friend request already sent!");
     }
-  }
+  };
   return loading ? (
     <Loader />
   ) : (
