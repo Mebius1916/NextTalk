@@ -70,6 +70,9 @@ function displayTime(createdAt:any) {
   } else {
     // 如果不在同一天内，显示几天前
     const daysAgo = differenceInDays(now, createdAtDate);
+    if(daysAgo===0){
+      return 'Yesterday'
+    }
     return `${daysAgo} days ago`;
   }
 }
