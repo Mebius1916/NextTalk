@@ -31,13 +31,12 @@ const ChatDetails = ({ chatId }: { chatId: string }) => {
   const { data: session } = useSession();
   const currentUser = session?.user as SessionData;
   const [isSend, setIsSend] = useState(
-    currentUser?.isSend.includes(otherMembers[0]?._id)
+    currentUser && currentUser.isSend&&otherMembers.length === 1 ?  currentUser?.isSend.includes(otherMembers[0]?._id): false
+
   );
-  console.log(currentUser?.isSend.includes(otherMembers[0]?._id))
-  console.log(isSend)
   const [text, setText] = useState("");
   const [isFriend, setIsFriend] = useState(
-    currentUser.friends.includes(otherMembers[0]?._id)
+    currentUser && currentUser.friends && otherMembers.length === 1 ? currentUser.friends.includes(otherMembers[0]?._id) : false
   );
   const handleStateChange = () => {
     setIsFriend(true);

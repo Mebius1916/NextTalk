@@ -21,7 +21,7 @@ const Chat = () => {
   const [chats, setChats] = useState([]);
   const [search, setSearch] = useState("");
   const currentChatId = chatId.toString();
-  const currentUser = session?.user as SessionData | null;
+  const currentUser = session?.user as SessionData;
   const router = useRouter();
 
   const getChats = async () => {
