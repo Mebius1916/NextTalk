@@ -28,27 +28,24 @@ const ChatDetails = ({ chatId }: { chatId: string }) => {
   const [lastMessage, setLastMessage] = useState(chat?.messages?.length > 0 && messageLength.text);
 
   const [otherMembers, setOtherMembers] = useState([]) as any;
-  const { data: session } = useSession();
+  const { data: session,status } = useSession();
   const currentUser = session?.user as SessionData;
-  const [isSend, setIsSend] = useState(
-    currentUser && currentUser.isSend&&otherMembers.length === 1 ?  currentUser?.isSend.includes(otherMembers[0]?._id): false
-
-  );
   const [text, setText] = useState("");
+  const userSend = currentUser?.isSend as any;
+  const [isSend, setIsSend] = useState(true);
   const [isFriend, setIsFriend] = useState(
     currentUser && currentUser.friends && otherMembers.length === 1 ? currentUser.friends.includes(otherMembers[0]?._id) : false
   );
   const handleStateChange = () => {
     setIsFriend(true);
   }
-  const userSend = currentUser?.isSend as any;
-
+  useEffect(() => {
+    if (status === "authenticated") {
+      setIsSend(userSend.includes(otherMembers[0]?._id));
+    }
+  }, [status, userSend, otherMembers]);
   useEffect(() => {
     setLastMessage(chat?.messages?.length > 0 && messageLength.text);
-    setIsSend(otherMembers.length === 1 && userSend.includes(otherMembers[0]?._id));
-    setIsFriend(
-      currentUser && currentUser.friends && otherMembers.length === 1? currentUser.friends.includes(otherMembers[0]?._id) : false
-    )
   }, [chat]);
   // console.log(otherMembers.length === 1 && lastMessage == `Welcome, ${currentUser?.username}` && isSend &&!isFriend)
   const sendFriendRequest = async () => {
@@ -75,7 +72,7 @@ const ChatDetails = ({ chatId }: { chatId: string }) => {
 
   // console.log(otherMembers.length === 1 && lastMessage == `Welcome, ${currentUser?.username}` && isSend &&!isFriend)
   useEffect(() => {
-    if (otherMembers.length === 1 && lastMessage == `Welcome, ${currentUser?.username}` && isSend &&!isFriend) {
+    if (otherMembers.length === 1 && lastMessage == `Welcome, ${currentUser?.username}` && isSend && !isFriend) {
       sendFriendRequest();
     }
   }, [lastMessage, currentUser, chatId]);
@@ -91,7 +88,7 @@ const ChatDetails = ({ chatId }: { chatId: string }) => {
       const data = await res.json();
       setChat(data);
       setOtherMembers(
-        data?.members?.filter((member: SessionData) => member._id!== currentUser?._id)
+        data?.members?.filter((member: SessionData) => member._id !== currentUser?._id)
       );
       setLoading(false);
     } catch (error) {
@@ -153,7 +150,7 @@ const ChatDetails = ({ chatId }: { chatId: string }) => {
     const handleMessage = async (newMessage: messageData) => {
       setChat((prevChat: any) => {
         return {
-         ...prevChat,
+          ...prevChat,
           messages: [...prevChat.messages, newMessage],
         };
       });
@@ -219,7 +216,7 @@ const ChatDetails = ({ chatId }: { chatId: string }) => {
       } catch (err) {
         console.error(err);
       }
-    }else{
+    } else {
       toast.info("Friend request already sent!");
     }
   };
@@ -250,24 +247,27 @@ const ChatDetails = ({ chatId }: { chatId: string }) => {
           ) : (
             <>
               <img
-                src={otherMembers[0].image || "/images/person.jpg"}
+                src={otherMembers[0]?.image || "/images/person.jpg"}
                 alt="profile photo"
                 className="w-11 h-11 rounded-full object-cover object-center ml-4"
               />
               <div className=" whitespace-nowrap overflow-hidden text-ellipsis mt-2">
-                <p className="text-tiny/[10px]">{otherMembers[0].username}</p>
-                <p className="text-mm text-grey-3 whitespace-nowrap overflow-hidden text-ellipsis">{otherMembers[0].email}</p>
+                <p className="text-tiny/[10px]">{otherMembers[0]?.username}</p>
+                <p className="text-mm text-grey-3 whitespace-nowrap overflow-hidden text-ellipsis">{otherMembers[0]?.email}</p>
               </div>
               <div className="absolute right-4 top-3.5">
-                { otherMembers.length === 1 ? (!isSend&&!isFriend ? (
-                <Button color="secondary" radius="sm"  variant="bordered" size="md" onClick={makeFriend}>
-                  Add friends
-                </Button>
+                {otherMembers.length === 1 ? (!isSend && !isFriend&&!isFriendRequestSent ? (
+                  <Button color="secondary" radius="sm" variant="bordered" size="md" onClick={() => {
+                    makeFriend();
+                    setIsSend(true);
+                  }}>
+                    Add friends
+                  </Button>
                 ) : (
-                  <Button isDisabled color="secondary" radius="sm"  variant="bordered" size="md" onClick={makeFriend}>
-                  Add friends
-                </Button>
-                )):null}
+                  <Button isDisabled color="secondary" radius="sm" variant="bordered" size="md" onClick={makeFriend}>
+                    Add friends
+                  </Button>
+                )) : null}
               </div>
             </>
           )}

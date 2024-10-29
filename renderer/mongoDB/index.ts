@@ -13,8 +13,6 @@ export const connectDB = async () => {
           process.env.MONGODB_URL as string,
           {
             dbName: "NextChat",//连接数据库的名字
-            //@ts-ignore
-            useNewUrlParser: true,
         });
         isConnected = true;
         console.log("MongoDB is connected");
