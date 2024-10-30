@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react'
 import { SessionData } from '../lib/type';
 import { differenceInDays, format, isSameDay } from 'date-fns';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link'
 
 type ChatBox = {
@@ -19,13 +18,10 @@ const ChatBox = ({ chat, currentUser, currentChatId }: ChatBox) => {
   const [lastMessage,setLastMessage] = useState(chat?.messages?.length > 0 && chat?.messages[chat?.messages.length - 1]); 
   const [ lastMessageAt,setLastMessageAt] = useState(chat?.lastMessageAt); 
   // console.log(lastMessage?.isSeen)
-  const [isSeen,setIsSeen] = useState(lastMessage?.isSeen);
-  const [isShow,setIsShow] = useState(lastMessage&&lastMessage?.sender?._id!==currentUser._id &&!isSeen);
-  const read = () => {
-    const readMessage = async () => {
+  const [isShow,setIsShow] = useState(lastMessage&&lastMessage?.sender?._id!==currentUser._id &&!lastMessage?.isSeen);
+  const read = async() => {
       if(lastMessage){
       try {
-        setIsSeen(true);
         setIsShow(false);
         const res = await fetch(`/api/messages/read`, {
           method: "POST",
@@ -39,14 +35,11 @@ const ChatBox = ({ chat, currentUser, currentChatId }: ChatBox) => {
       } catch (error) {
         console.log(error);
       }
-    };
-    readMessage();
   }
   };
 
   useEffect(() => {
-    setIsShow(lastMessage&&lastMessage?.sender?._id!==currentUser._id &&!isSeen);
-    setIsSeen(isShow);
+    setIsShow(lastMessage&&lastMessage?.sender?._id!==currentUser._id &&!lastMessage?.isSeen);
     setLastMessageAt(lastMessage?.createdAt);
   }, [lastMessage]);
 

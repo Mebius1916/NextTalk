@@ -22,7 +22,7 @@ if (isProd) {
       preload: path.join(__dirname, 'preload.js'),
     },
     backgroundColor: '#FFFFFF',
-    resizable: false,
+    // resizable: false,
     
   })
   if (isProd) {

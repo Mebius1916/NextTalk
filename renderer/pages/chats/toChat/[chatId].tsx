@@ -70,15 +70,15 @@ const Chat = () => {
         }
       };
 
-      const handleNewChat = (newChat: any) => {
-        setChats((allChats) => [...allChats, newChat] as any);
-      }
+      // const handleNewChat = (newChat: any) => {
+      //   // setChats((allChats) => [...allChats, newChat] as any);
+      // }
       pusherClient.bind("update-chat", handleChatUpdate);
-      pusherClient.bind("new-chat", handleNewChat);
+      // pusherClient.bind("new-chat", handleNewChat);
       return () => {
         pusherClient.unsubscribe(currentUser._id);
         pusherClient.unbind("update-chat", handleChatUpdate);
-        pusherClient.unbind("new-chat", handleNewChat);
+        // pusherClient.unbind("new-chat", handleNewChat);
       };
     }
   }, [currentUser]);

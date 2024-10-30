@@ -42,6 +42,7 @@ const ChatDetails = ({ chatId }: { chatId: string }) => {
   useEffect(() => {
     if (status === "authenticated") {
       setIsSend(userSend.includes(otherMembers[0]?._id));
+      setIsFriend(currentUser && currentUser.friends && otherMembers.length === 1 ? currentUser.friends.includes(otherMembers[0]?._id) : false)
     }
   }, [status, userSend, otherMembers]);
   useEffect(() => {
