@@ -10,7 +10,7 @@ type Props = {
 
 const Layout = ({
   children,
-  title = 'NextTalk',
+  title = 'next_talk',
   description = 'A real-time chat tool based on nextron (NextJS+electron) with integrated AI functions',
   favicon = 'https://github.com/user-attachments/assets/3cfb9427-4dae-4a69-b5c3-f3e34bf2df7b'
 }: Props) => (
