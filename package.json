@@ -1,9 +1,9 @@
 {
   "private": true,
-  "name": "my-nextron-app",
-  "description": "My application description",
+  "name": "next_talk",
+  "description": "A real-time chat tool based on nextron (NextJS+electron) with integrated AI functions",
   "version": "1.0.0",
-  "author": "Yoshihide Shiono <shiono.yoshihide@gmail.com>",
+  "author": "mebius <liaoshihan176@gmail.com>",
   "main": "app/background.js",
   "scripts": {
     "dev": "nextron",
