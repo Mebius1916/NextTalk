@@ -48,7 +48,7 @@ github:[Mebius1916/NextTalk: A real-time chat tool based on nextron (NextJS+elec
 
 单选创建一对一聊天，多选创建群组聊天。
 
-右边是个3D星球，可自行旋转
+右边是个3D星球，可自行旋转。
 
 #### 申请好友、同意申请
 ![image](https://github.com/user-attachments/assets/66d9b0ce-481a-49d5-b0c4-36e589814422)
