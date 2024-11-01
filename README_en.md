@@ -1,3 +1,4 @@
+[<a href="https://github.com/Mebius1916/NextTalk/edit/main/README_en.md">English</a> / <a href="https://github.com/Mebius1916/NextTalk/edit/main/README.md">Chinese</a> ]
 # NextTalk
 <img src="https://github.com/user-attachments/assets/3cfb9427-4dae-4a69-b5c3-f3e34bf2df7b" width="150" height="150">
 
