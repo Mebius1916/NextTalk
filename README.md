@@ -7,7 +7,7 @@
 
 但由于使用了NextJS中的ssr及api route功能，该程序只能在开发环境运行。
 
-关于生产：我将其网页端部分分离，并用Pake将其打包成桌面端，生产体验安装包我放在了release里，目前只打包了windows版本。
+关于生产版本：我将其网页端部分分离，并用Pake将其打包成桌面端，生产体验安装包我放在了release里，目前只打包了windows版本。
 
 github:[Mebius1916/NextTalk: A real-time chat tool based on nextron (NextJS+electron) with integrated AI functions](https://github.com/Mebius1916/NextTalk "Mebius1916/NextTalk: A real-time chat tool based on nextron (NextJS+electron) with integrated AI functions")
 
