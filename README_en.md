@@ -109,7 +109,7 @@ The web version is deployed through Vercel.
 
 GitHub: [Mebius1916/NextTalk\_web: Web version of the NextTalk project](https://github.com/Mebius1916/NextTalk_web "Mebius1916/NextTalk_web: Web version of the NextTalk project")
 
-Experience address: [https://nexttalk.mebius.fun](https://nexttalk.mebius.fun/ "https://nexttalk.mebius.fun")
+Experience address: https://next-talk-six.vercel.app
 
 ***
 
