@@ -17,9 +17,9 @@ github:[Mebius1916/NextTalk: A real-time chat tool based on nextron (NextJS+elec
 
 ### 技术栈
 
-前端：NextJS(react)+Tailwindcss+Typescript+ThreeJS+NextUI+MaterialUI(icons)+NextAuth+Cloudinary+Electron+Pusher+React-toastify+OpenAI+React-email
+前端: NextJS (React) + TailwindCSS + TypeScript + ThreeJS + NextUI + MaterialUI (icons) + NextAuth + Cloudinary + Electron + Pusher + React-toastify + OpenAI + React-email
 
-后端：NextJS(ssr)+MongoDB+Mongoose
+后端: NextJS (SSR) + MongoDB + Mongoose
 
 ***
 
