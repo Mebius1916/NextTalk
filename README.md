@@ -109,6 +109,8 @@ GPT3.5助手，比较粗糙，没有对生产消息做格式处理，不能生�
 
 网页版通过vercel部署。
 
+网页版响应速度较慢，推测是vercel服务器距离其他服务商服务器较远，请耐心等待不要多次点击。
+
 github：[Mebius1916/NextTalk\_web: NextTalk项目的网页版](https://github.com/Mebius1916/NextTalk_web "Mebius1916/NextTalk_web: NextTalk项目的网页版")
 
 体验地址：[https://nexttalk.mebius.fun](https://nexttalk.mebius.fun/ "https://nexttalk.mebius.fun")
