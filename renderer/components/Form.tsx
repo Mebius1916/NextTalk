@@ -147,7 +147,6 @@ const Form = ({ type }: { type: string }) => {
       setIsFirstTime(false);
       toast.info('Sending verification code...');
       await fetchVerificationCode();
-      toast.success('Verification code sent successfully');
     } else {
       // 如果定时器已经启动，则显示剩余时间
       if (timerActive && timerStart) {
@@ -180,8 +179,13 @@ const Form = ({ type }: { type: string }) => {
     if (res.ok) {
       const data = await res.json();
       setCode(data.validationCode);
+      toast.success('Verification code sent successfully');
     } else {
-      toast.error('Failed to send verification code');
+      const errorResponse = await res.json(); 
+      // console.log(errorResponse.error);
+      if (errorResponse?.error) {
+        toast.error(errorResponse.error.message);
+      }
     }
   }
   return (

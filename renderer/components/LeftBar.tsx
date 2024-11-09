@@ -17,7 +17,7 @@ const LeftBar = () => {
         alt="mebius"
         className='mt-2'
       />
-      <Link href={`/chats/toChat/${home}`}>
+      <Link href={`/chats/toChat/${home}` }>
         <ChatOutlinedIcon className='mt-10 ' color='disabled' />
       </Link>
       <Link href='/chats/toTalk'>

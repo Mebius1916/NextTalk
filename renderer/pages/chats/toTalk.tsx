@@ -71,7 +71,6 @@ const ToTalk = () => {
         name,
       }),
     });
-    const chat = await res.json();
 
     if (res.ok) {
       router.push(`/chats/toChat/${home}`);

@@ -13,7 +13,6 @@ import { messageData, SessionData, chatData } from "../lib/type";
 import { pusherClient } from "../lib/pusher";
 import { Button } from "@nextui-org/react";
 import { toast } from "react-toastify";
-
 const ChatDetails = ({ chatId }: { chatId: string }) => {
   const [loading, setLoading] = useState(true);
   const [chat, setChat] = useState<chatData>({
@@ -30,28 +29,31 @@ const ChatDetails = ({ chatId }: { chatId: string }) => {
   const [otherMembers, setOtherMembers] = useState([]) as any;
   const { data: session,status } = useSession();
   const currentUser = session?.user as SessionData;
+  const [currentFriends, setCurrentFriends] = useState(currentUser.friends);
+
   const [text, setText] = useState("");
-  const userSend = currentUser?.isSend as any;
-  const [isSend, setIsSend] = useState(true);
-  const [isFriend, setIsFriend] = useState(
-    currentUser && currentUser.friends && otherMembers.length === 1 ? currentUser.friends.includes(otherMembers[0]?._id) : false
-  );
+  const [send, setSend] = useState(currentUser?.isSend);
+  const [isSend, setIsSend] = useState(send?.includes(otherMembers[0]?._id));
+
+  const madeFriend = () =>{
+    setCurrentFriends(prevFriends => [...prevFriends, otherMembers[0]?._id] as any);
+  }
+
   const handleStateChange = () => {
-    setIsFriend(true);
+    madeFriend();
   }
   useEffect(() => {
     if (status === "authenticated") {
-      setIsSend(userSend.includes(otherMembers[0]?._id));
-      setIsFriend(currentUser && currentUser.friends && otherMembers.length === 1 ? currentUser.friends.includes(otherMembers[0]?._id) : false)
+      setCurrentFriends(currentUser.friends);
     }
-  }, [status, userSend, otherMembers]);
+  }, [status]);
+
   useEffect(() => {
     setLastMessage(chat?.messages?.length > 0 && messageLength.text);
   }, [chat]);
-  // console.log(otherMembers.length === 1 && lastMessage == `Welcome, ${currentUser?.username}` && isSend &&!isFriend)
+
   const sendFriendRequest = async () => {
     try {
-      setIsFriend(true);
       const res = await fetch("/api/messages/agreed", {
         method: "POST",
         headers: {
@@ -62,19 +64,14 @@ const ChatDetails = ({ chatId }: { chatId: string }) => {
           friendId: otherMembers[0]?._id,
         }),
       });
-      if (res.ok) {
-        setIsFriend(true);
-      }
     } catch (error) {
       console.error("Error sending friend request:", error);
     }
   };
-  // console.log(currentUser)
-
-  // console.log(otherMembers.length === 1 && lastMessage == `Welcome, ${currentUser?.username}` && isSend &&!isFriend)
   useEffect(() => {
-    if (otherMembers.length === 1 && lastMessage == `Welcome, ${currentUser?.username}` && isSend && !isFriend) {
+    if (otherMembers.length === 1 && lastMessage == `Welcome, ${currentUser?.username}` && !(currentFriends?.includes( otherMembers[0]?._id)) ) {
       sendFriendRequest();
+      madeFriend();
     }
   }, [lastMessage, currentUser, chatId]);
 
@@ -140,12 +137,14 @@ const ChatDetails = ({ chatId }: { chatId: string }) => {
       console.log(err);
     }
   };
+  const memberId = otherMembers?.[0]?._id?? null;
 
   useEffect(() => {
     //订阅了一个名为 chatId(来自后端与后端一致) 的 Pusher 频道
     //每名用户都有属于自己的chatId
     pusherClient.subscribe(chatId);
-
+    if (memberId) pusherClient.subscribe(memberId)
+    pusherClient.subscribe(currentUser._id)
     //响应添加newMessage
 
     const handleMessage = async (newMessage: messageData) => {
@@ -156,18 +155,28 @@ const ChatDetails = ({ chatId }: { chatId: string }) => {
         };
       });
     };
-
-    // 将handleMessage函数绑定到new-message事件,每次有新消息到达时，
-    // setChat就会被调用，从而更新组件的状态以反映新消息。
+    const handleFriend = async (friendId: string) => {
+      // 使用setCurrentFriends正确地更新状态
+      setCurrentFriends(prevFriends => [...prevFriends, friendId] as any);
+    };
+    const handleSend = async (friendId: string) => {
+      setSend(prevFriends => [...prevFriends, friendId] as any);
+      setIsSend(send.includes(otherMembers[0]?._id));
+    };
+    pusherClient.bind("new-friend", handleFriend);
     pusherClient.bind("new-message", handleMessage);
-
+    pusherClient.bind("new-send", handleSend);
     //清理阶段
     // 当组件卸载时，取消订阅Pusher频道
     return () => {
       pusherClient.unsubscribe(chatId);
       pusherClient.unbind("new-message", handleMessage);
+      pusherClient.unsubscribe(otherMembers[0]?._id);
+      pusherClient.unbind("new-friend", handleFriend);
+      pusherClient.unsubscribe(currentUser._id);
+      pusherClient.unbind("new-send", handleSend);
     };
-  }, [chatId]);
+  }, [chatId,messageLength,currentUser._id,otherMembers]);
 
   /* Scrolling down to the bottom when having the new message */
 
@@ -221,6 +230,8 @@ const ChatDetails = ({ chatId }: { chatId: string }) => {
       toast.info("Friend request already sent!");
     }
   };
+  // console.log(currentFriends?.includes( otherMembers[0]?._id))
+
   return loading ? (
     <Loader />
   ) : (
@@ -257,7 +268,7 @@ const ChatDetails = ({ chatId }: { chatId: string }) => {
                 <p className="text-mm text-grey-3 whitespace-nowrap overflow-hidden text-ellipsis">{otherMembers[0]?.email}</p>
               </div>
               <div className="absolute right-4 top-3.5">
-                {otherMembers.length === 1 ? (!isSend && !isFriend&&!isFriendRequestSent ? (
+                {otherMembers.length === 1 ? (!isSend && !(currentFriends?.includes( otherMembers[0]?._id))&&!isFriendRequestSent ? (
                   <Button color="secondary" radius="sm" variant="bordered" size="md" onClick={() => {
                     makeFriend();
                     setIsSend(true);
@@ -290,7 +301,7 @@ const ChatDetails = ({ chatId }: { chatId: string }) => {
           <div ref={bottomRef} />
         </div>
 
-        {chat.isGroup || isFriend ? (
+        {chat.isGroup || currentFriends?.includes( otherMembers[0]?._id) ? (
           <div className="w-full flex items-center justify-between px-4 py-3 rounded-3xl cursor-pointer bg-white">
             <div className="flex items-center gap-4 w-full">
               <CldUploadButton

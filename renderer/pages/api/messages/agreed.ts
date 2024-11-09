@@ -2,6 +2,7 @@ import { NextApiRequest,NextApiResponse } from "next";
 import { connectDB } from "../../../mongoDB";
 
 import { User } from "../../../mongoDB/models/User";
+import { pusherServer } from "../../../lib/pusher";
 
 export default async function handler(req:NextApiRequest,res:NextApiResponse){
   try{
@@ -18,6 +19,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
         },
         { new: true }
       ).exec();
+      await pusherServer.trigger(friendId, "new-friend", friendId)
       return res.status(200).json(user);
     }
   }catch(err){

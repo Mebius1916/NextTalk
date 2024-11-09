@@ -16,14 +16,16 @@ import { pusherClient } from '../../../lib/pusher';
 import { ToastContainer } from 'react-toastify';
 const Chat = () => {
   const { chatId } = useParams()?? { chatId: 'home' };
-  const { data: session } = useSession();
+  const { data: session,status } = useSession();
   const [loading, setLoading] = useState(true);
   const [chats, setChats] = useState([]);
   const [search, setSearch] = useState("");
   const currentChatId = chatId.toString();
-  const currentUser = session?.user as SessionData;
+  const [currentUser, setCurrentUser] = useState<SessionData>(session?.user as SessionData);
   const router = useRouter();
-
+  useEffect(()=>{
+    if(status==='authenticated') setCurrentUser(session?.user as SessionData);
+  },[status])
   const getChats = async () => {
     try {
       const res = await fetch(
@@ -70,15 +72,15 @@ const Chat = () => {
         }
       };
 
-      // const handleNewChat = (newChat: any) => {
-      //   // setChats((allChats) => [...allChats, newChat] as any);
-      // }
+      const handleNewChat = (newChat: any) => {
+        setChats((allChats) => [...allChats] as any);
+      }
       pusherClient.bind("update-chat", handleChatUpdate);
-      // pusherClient.bind("new-chat", handleNewChat);
+      pusherClient.bind("new-chat", handleNewChat);
       return () => {
         pusherClient.unsubscribe(currentUser._id);
         pusherClient.unbind("update-chat", handleChatUpdate);
-        // pusherClient.unbind("new-chat", handleNewChat);
+        pusherClient.unbind("new-chat", handleNewChat);
       };
     }
   }, [currentUser]);

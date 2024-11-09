@@ -1,7 +1,8 @@
 import { format, isSameDay, differenceInDays } from 'date-fns';
 import { SessionData } from "../lib/type"
 import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { pusherClient } from '../lib/pusher';
 type MessageBox = {
   message: any,
   currentUser: SessionData,
@@ -11,9 +12,20 @@ type MessageBox = {
 }
 
 const MessageBox = ({ message, currentUser,handleStateChange,chatId,otherMembers }: MessageBox) => {
-  const isFriend = currentUser?.friends?.includes( message?.sender?._id);
-  const [isAgree, setIsAgree] = useState(isFriend);
- 
+  const [currentFriends, setCurrentFriends] = useState(currentUser?.friends); 
+  const memberId = otherMembers?.[0]?._id?? null;
+  useEffect(() => {
+    if (memberId) pusherClient.subscribe(memberId);
+    const handleFriend = async (friendId: string) => {
+      setCurrentFriends(prevFriends => [...prevFriends, friendId] as any);
+    };
+    pusherClient.bind("new-friend", handleFriend);
+    return () => {
+      pusherClient.unsubscribe(otherMembers[0]._id);
+      pusherClient.unbind("new-friend", handleFriend);
+    };
+  }, [chatId]);
+
 function displayTime(createdAt:string) {
   const createdAtDate = new Date(createdAt);
   const now = new Date();
@@ -37,9 +49,8 @@ function displayTime(createdAt:string) {
   }
 }
   const agree = async () =>{
-    setIsAgree(true);
-    handleStateChange();
     try{
+      handleStateChange();
       const res = await fetch("/api/messages/route", {
         method: "POST",
         headers: {
@@ -73,10 +84,8 @@ function displayTime(createdAt:string) {
               friendId: otherMembers[0]._id,
             }),
           })
-          // if(res.ok){
-          //     setIsAgree(true);
-          //     handleStateChange();
-          //   }
+          if(res.ok) window.location.reload();
+
         }
       }
     }catch(err){
@@ -101,8 +110,12 @@ function displayTime(createdAt:string) {
              </p>
               <p className="w-fit bg-secondary text-white p-2 rounded-md text-smm max-w-[400px] whitespace-normal break-words">{message?.text}</p>
             </div>
-            { !isAgree && !isFriend && message?.text=="Friend application"?(
-            <div className="mb-[0.3rem] cursor-pointer " onClick={agree}>
+            {  !(currentFriends?.includes( message?.sender?._id)) && message?.text=="Friend application"?(
+            <div className="mb-[0.3rem] cursor-pointer " onClick={()=>{
+              agree();
+              setCurrentFriends(prevFriends => [...prevFriends, message?.sender?._id] as any)
+    
+            }}>
               <CheckCircleOutlineOutlinedIcon color="secondary"></CheckCircleOutlineOutlinedIcon>
             </div>
             ):null}
@@ -142,3 +155,4 @@ function displayTime(createdAt:string) {
 }
 
 export default MessageBox
+
