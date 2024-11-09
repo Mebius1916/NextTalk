@@ -30,7 +30,7 @@ const ChatDetails = ({ chatId }: { chatId: string }) => {
   const { data: session,status } = useSession();
   const currentUser = session?.user as SessionData;
   const [currentFriends, setCurrentFriends] = useState(currentUser.friends);
-
+  const [change, setChange] = useState(false);
   const [text, setText] = useState("");
   const [send, setSend] = useState(currentUser?.isSend);
   const [isSend, setIsSend] = useState(send?.includes(otherMembers[0]?._id));
@@ -68,10 +68,31 @@ const ChatDetails = ({ chatId }: { chatId: string }) => {
       console.error("Error sending friend request:", error);
     }
   };
+  const sendFriendRequesty = async () => {
+    try {
+      const res = await fetch("/api/messages/agreed", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          currentUserId: otherMembers[0]?._id,
+          friendId: currentUser._id,
+        }),
+      });
+    } catch (error) {
+      console.error("Error sending friend request:", error);
+    }
+  };
   useEffect(() => {
     if (otherMembers.length === 1 && lastMessage == `Welcome, ${currentUser?.username}` && !(currentFriends?.includes( otherMembers[0]?._id)) ) {
       sendFriendRequest();
       madeFriend();
+    }
+    if (otherMembers.length === 1 && lastMessage == `Welcome, ${otherMembers[0]?.username}` && !(currentFriends?.includes( otherMembers[0]?._id)) ) {
+      sendFriendRequesty();
+      madeFriend();
+      setChange(true);
     }
   }, [lastMessage, currentUser, chatId]);
 
@@ -296,6 +317,7 @@ const ChatDetails = ({ chatId }: { chatId: string }) => {
               chatId={chatId}
               otherMembers={otherMembers}
               handleStateChange={handleStateChange}
+              change={change}
             />
           ))}
           <div ref={bottomRef} />

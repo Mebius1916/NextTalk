@@ -9,11 +9,13 @@ type MessageBox = {
   handleStateChange: () => void,
   chatId?:string,
   otherMembers?:any
+  change:boolean
 }
 
-const MessageBox = ({ message, currentUser,handleStateChange,chatId,otherMembers }: MessageBox) => {
+const MessageBox = ({ message, currentUser,handleStateChange,chatId,otherMembers,change }: MessageBox) => {
   const [currentFriends, setCurrentFriends] = useState(currentUser?.friends); 
   const memberId = otherMembers?.[0]?._id?? null;
+
   useEffect(() => {
     if (memberId) pusherClient.subscribe(memberId);
     const handleFriend = async (friendId: string) => {
@@ -50,7 +52,7 @@ function displayTime(createdAt:string) {
 }
   const agree = async () =>{
     try{
-      handleStateChange();
+     
       const res = await fetch("/api/messages/route", {
         method: "POST",
         headers: {
@@ -84,7 +86,7 @@ function displayTime(createdAt:string) {
               friendId: otherMembers[0]._id,
             }),
           })
-          if(res.ok) window.location.reload();
+          if(res.ok) handleStateChange();
 
         }
       }
@@ -110,11 +112,11 @@ function displayTime(createdAt:string) {
              </p>
               <p className="w-fit bg-secondary text-white p-2 rounded-md text-smm max-w-[400px] whitespace-normal break-words">{message?.text}</p>
             </div>
-            {  !(currentFriends?.includes( message?.sender?._id)) && message?.text=="Friend application"?(
+            {  !(currentFriends?.includes( message?.sender?._id)) && message?.text=="Friend application"&&!change?(
             <div className="mb-[0.3rem] cursor-pointer " onClick={()=>{
               agree();
               setCurrentFriends(prevFriends => [...prevFriends, message?.sender?._id] as any)
-    
+
             }}>
               <CheckCircleOutlineOutlinedIcon color="secondary"></CheckCircleOutlineOutlinedIcon>
             </div>
