@@ -91,8 +91,7 @@ const ToTalk = () => {
     <div className='bg-gray-100 h-[calc(100vh-2.25rem)] shadow-inset-top-left flex ' id='home'>
       <div className=' flex-1 box-border '>
         <div className=' h-[calc(100vh-5rem)] mt-3 flex flex-col max-md:w-full  '>
-          <div className='flex flex-row flex-wrap content-start overflow-y-auto h-[calc(100vh-8rem)] ml-3 '>
-          <Input
+        <Input
               onChange={(e) => setSearch(e.target.value)}
               isClearable
               radius="lg"
@@ -104,6 +103,8 @@ const ToTalk = () => {
                 <SearchIcon className="text-black/50 mb-0.5 dark:text-white/90 text-slate-400 pointer-events-none flex-shrink-0" />
               }
             />
+          <div className='flex flex-row flex-wrap content-start overflow-y-auto h-[calc(100vh-8rem)] ml-3 '>
+          
             {contacts.map((current: SessionData, index) => (
 
               <div
@@ -131,7 +132,7 @@ const ToTalk = () => {
 
             ))}
           </div>
-          <div className='text-center'>
+          <div className='text-center mt-6'>
             <Button 
             color="secondary" 
             variant="shadow" 
