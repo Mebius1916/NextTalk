@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { lazy, Suspense, useEffect, useState } from 'react'
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from 'next/navigation'
 import { SessionData } from '../../lib/type';
@@ -9,7 +9,7 @@ import { CheckCircle, RadioButtonUnchecked } from '@mui/icons-material';
 import { Button, divider } from "@nextui-org/react";
 import { Input } from "@nextui-org/react";
 import {SearchIcon} from "../../components/SearchIcon";
-import EarthCanvas from '../../components/Earth';
+const EarthCanvas =lazy(() => import('../../components/Earth'));
 const ToTalk = () => {
   const { data: session } = useSession();
   const currentUser = session?.user as SessionData;
@@ -147,9 +147,11 @@ const ToTalk = () => {
       <div className=' flex-1 box-border ml-6'>
 
         {!isGroup ? (
-          <div className="flex items-center justify-center h-full max-sm:hidden" >
-            <EarthCanvas />
-          </div>
+          <Suspense fallback={<Loader/>}>
+            <div className="flex items-center justify-center h-full max-sm:hidden" >
+              <EarthCanvas />
+           </div>
+        </Suspense>
         ) : (
           <>
             <div className=' h-[calc(100vh-3rem)] mt-3 flex flex-col max-sm:hidden'>
