@@ -8,7 +8,7 @@
 
 安装包请移步右侧的releases中下载安装。
 
-为什么使用page route？因为Nextron只支持page route，我也想使用api route。
+为什么使用page route？因为Nextron只支持page route，我也想使用app route。
 
 ps: 该项目的修改我会同步至网页版的修改。
 
