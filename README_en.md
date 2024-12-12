@@ -20,7 +20,7 @@ If you like it, give it a star\~
 
 Frontend: NextJS (React) + TailwindCSS + TypeScript + ThreeJS + NextUI + MaterialUI (icons) + NextAuth + Cloudinary + Electron + Pusher + React-toastify + OpenAI + React-email
 
-Backend: NextJS (SSR) + MongoDB + Mongoose
+Backend: NextJS (api route) + MongoDB + Mongoose
 
 ***
 
@@ -87,7 +87,7 @@ Click on the group chat avatar in the chat to change the group chat avatar and n
 
 Although this project is based on Nextron, I realized when packaging that Nextron's production environment does not support NextJS's SSR and API routes (which I used), so this project can only run in a development environment, meaning it is strictly a NextJS project. This has led me to dislike Nextron, for the following reasons:
 
-1. I believe API route (SSR) is an indispensable part of NextJS, the reason I use NextJS is for its capability to rapidly develop full-stack projects, and Nextron's omission of this feature makes it feel like merely React + Electron with a NextJS ecosystem. The author mentioned this was omitted due to security concerns, but I think this feature should exist, even if not used, as personal developers like me are not concerned about security issues.
+1. I believe API route is an indispensable part of NextJS, the reason I use NextJS is for its capability to rapidly develop full-stack projects, and Nextron's omission of this feature makes it feel like merely React + Electron with a NextJS ecosystem. The author mentioned this was omitted due to security concerns, but I think this feature should exist, even if not used, as personal developers like me are not concerned about security issues.
 2. Nextron does not support the app route method, only the traditional pages route, which is why my project uses pages route and not app route. This is not ideal, as app route is the future of NextJS.
 3. Nextron only supports webpack for packaging. Personally, I think the only advantage of webpack as a packaging tool nowadays is its extensive ecosystem, but I prefer using Vite.
 
