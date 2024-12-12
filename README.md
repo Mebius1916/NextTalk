@@ -22,7 +22,7 @@ ps: 该项目的修改我会同步至网页版的修改。
 
 前端: NextJS (React) + TailwindCSS + TypeScript + ThreeJS + NextUI + MaterialUI (icons) + NextAuth + Cloudinary + Electron + Pusher + React-toastify + OpenAI + React-email
 
-后端: NextJS (SSR) + MongoDB + Mongoose
+后端: NextJS (api route) + MongoDB + Mongoose
 
 ***
 
@@ -89,7 +89,7 @@ GPT3.5助手，比较粗糙，没有对生产消息做格式处理，不能生�
 
 该项目虽然是基于Nextron的，但是当我打包的时候发现Nextron生产环境是不支持NextJS的ssr及api route的（我使用了），所以这个项目只能在开发环境运行，也就是说这个项目严格意义上来说只是个nextjs项目，这就导致我并不喜欢nextron，具体体现在以下几点：
 
-1. 我认为api route(ssr)是NextJS中不可或缺的一部分，我之所以使用NextJS便是因为其可以快速开发全栈项目的特性，而Nextron阉割掉了这个功能就让我感觉Nextron只是拥有NextJS生态的react+electron。作者说阉割是因为安全问题，而我个人认为这个功能可以不用，但是得存在，像我这种个人开发者并不担心什么安全性问题。
+1. 我认为api route是NextJS中不可或缺的一部分，我之所以使用NextJS便是因为其可以快速开发全栈项目的特性，而Nextron阉割掉了这个功能就让我感觉Nextron只是拥有NextJS生态的react+electron。作者说阉割是因为安全问题，而我个人认为这个功能可以不用，但是得存在，像我这种个人开发者并不担心什么安全性问题。
 2. Nextron中不支持app route的写法，只支持传统的pages route，这就是为什么我的项目中使用的是pages route而不是app route这是不好的，app route才是NextJS的未来。
 3. Nextron只支持webpack打包，我个人认为在现在webpack作为打包工具唯一的优势应该就是其生态广阔，我个人还是更加喜欢vite打包。
 
