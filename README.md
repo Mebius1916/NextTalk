@@ -3,6 +3,7 @@
 <img src="https://github.com/user-attachments/assets/3cfb9427-4dae-4a69-b5c3-f3e34bf2df7b" width="150" height="150">
 
 ### 简介
+该项目是我React的入门项目，写的很辣鸡哈哈哈
 
 该项目是一个基于Nextron(NextJS+Electron)的桌面端实时聊天工具。
 
